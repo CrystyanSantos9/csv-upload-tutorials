@@ -1,0 +1,35 @@
+version: '3.3'
+services:
+  db: # Service docker name
+    image: mysql:8.0.23
+    restart: "no"
+    container_name: ctn_csv_upload_tutorials_db
+    environment:
+      MYSQL_DATABASE: 'csv_database'
+      # So you don't have to use root, but you can if you like
+      MYSQL_USER: 'user'
+      # You can use whatever password you like
+      MYSQL_PASSWORD: 'pass'
+      # Password for root access
+      MYSQL_ROOT_PASSWORD: 'pass'
+    ports:
+      # <Port exposed> : < MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where our data will be persisted
+    volumes:
+      - csv_database_vol:/var/lib/mysql
+
+  admin:
+    image: adminer
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - 8080:8080
+
+# Names our volume
+volumes:
+  csv_database_vol:
